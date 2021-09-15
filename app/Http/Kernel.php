@@ -3,6 +3,7 @@
 namespace App\Http;
 
 use App\Http\Middleware\AdminCheckMiddlware;
+use App\Http\Middleware\ApproveCheckMiddleware;
 use App\Http\Middleware\Authenticate;
 use App\Http\Middleware\EmployeeCheckMiddlware;
 use App\Http\Middleware\EncryptCookies;

@@ -3,10 +3,7 @@
 namespace Modules\Employeer\Http\Controllers;
 
 use App\Http\Resources\DataResource;
-use Illuminate\Contracts\Support\Renderable;
-use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
-use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Routing\Controller;
 use Modules\Core\Entities\Vacancy;
 use Modules\Employeer\Http\Requests\vacancy\vacancyCreateRequest;
@@ -25,10 +22,11 @@ class VacancyController extends Controller
      * Display a listing of the resource.
      * @return AnonymousResourceCollection
      */
-    public function index():AnonymousResourceCollection
+    public function index(): AnonymousResourceCollection
     {
         $vacancies = QueryBuilder::for(Vacancy::class)
-            ->paginate(10);
+            ->with(['category', 'district', 'cities', 'jobs', 'files'])
+            ->paginate(100);
         return DataResource::collection($vacancies);
     }
 
@@ -49,10 +47,12 @@ class VacancyController extends Controller
      * @param Vacancy $id
      * @return DataResource
      */
-    public function show(Vacancy $id):DataResource
+    public function show(Vacancy $id): DataResource
     {
-        Vacancy::whereId($id->id)->firstOrFail();
-        return new DataResource($id);
+        $vacancy = Vacancy::whereId($id->id)
+            ->with(['category', 'district', 'cities', 'jobs', 'files'])
+            ->firstOrFail();
+        return new DataResource($vacancy);
     }
 
     /**
@@ -61,7 +61,7 @@ class VacancyController extends Controller
      * @param Vacancy $id
      * @return DataResource
      */
-    public function update(vacancyUpdateRequest $request,Vacancy $vacancy): DataResource
+    public function update(vacancyUpdateRequest $request, Vacancy $vacancy): DataResource
     {
         $vacancy->update($request->validated());
         return new DataResource($vacancy);
@@ -73,7 +73,7 @@ class VacancyController extends Controller
      * @param Vacancy $vacancy
      * @return DataResource
      */
-    public function destroy(Vacancy $vacancy):DataResource
+    public function destroy(Vacancy $vacancy): DataResource
     {
         $vacancy->delete();
         return new DataResource($vacancy);

@@ -14,7 +14,6 @@ class VacancyUpdateRequest extends FormRequest
     public function rules()
     {
         return [
-            'deadline_date' => 'required',
             'is_approved' => 'required',
             'approved_by_id' => 'required',
             'approved_at' => 'required',

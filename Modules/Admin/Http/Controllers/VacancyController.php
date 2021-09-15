@@ -3,9 +3,6 @@
 namespace Modules\Admin\Http\Controllers;
 
 use App\Http\Resources\DataResource;
-
-use Illuminate\Contracts\Support\Renderable;
-use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Routing\Controller;
 use Modules\Admin\Http\Requests\Vacancy\VacancyUpdateRequest;
@@ -24,9 +21,12 @@ class VacancyController extends Controller
      * Display a listing of the resource.
      * @return AnonymousResourceCollection
      */
-    public function index():AnonymousResourceCollection
+    public function index(): AnonymousResourceCollection
     {
         $vacancies = QueryBuilder::for(Vacancy::class)
+            ->allowedFilters(['category.name', 'district.name', 'city.name', 'jobs.name'])
+            ->with(['category', 'district', 'cities', 'jobs', 'files'])
+            ->where('is_approved', 1)
             ->paginate(10);
         return DataResource::collection($vacancies);
     }
@@ -37,11 +37,25 @@ class VacancyController extends Controller
      * @param Vacancy $id
      * @return DataResource
      */
-    public function show(Vacancy $id):DataResource
+    public function show(Vacancy $id): DataResource
     {
-       Vacancy::whereId($id->id)->firstOrFail();
-       return new DataResource($id);
+        $vacancy = Vacancy::whereId($id->id)
+            ->with(['category', 'district', 'cities', 'jobs', 'files'])
+            ->firstOrFail();
+        return new DataResource($vacancy);
     }
+
+
+    public function indexPending(): AnonymousResourceCollection
+    {
+        $vacancies = QueryBuilder::for(Vacancy::class)
+            ->allowedFilters(['category.name', 'district.name', 'city.name', 'jobs.name'])
+            ->with(['category', 'district', 'cities', 'jobs', 'files'])
+            ->where('is_approved', 0)
+            ->paginate(10);
+        return DataResource::collection($vacancies);
+    }
+
 
     /**
      * Update the specified resource in storage.
@@ -49,7 +63,7 @@ class VacancyController extends Controller
      * @param Vacancy $id
      * @return DataResource
      */
-    public function update(VacancyUpdateRequest $request,Vacancy $id): DataResource
+    public function update(VacancyUpdateRequest $request, Vacancy $id): DataResource
     {
         $id->update($request->validated());
         return new DataResource($id);
@@ -58,12 +72,12 @@ class VacancyController extends Controller
 
     /**
      * Remove the specified resource from storage.
-     * @param Vacancy $id
+     * @param Vacancy $vacancy
      * @return DataResource
      */
-    public function destroy(Vacancy $id):DataResource
+    public function destroy(Vacancy $vacancy): DataResource
     {
-        $id->delete();
-        return new DataResource($id);
+        $vacancy->delete();
+        return new DataResource($vacancy);
     }
 }

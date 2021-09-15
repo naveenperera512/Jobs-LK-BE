@@ -4,12 +4,9 @@ namespace Modules\Admin\Http\Controllers;
 
 use App\Http\Resources\DataResource;
 use App\Models\User;
-use Illuminate\Contracts\Support\Renderable;
-use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Routing\Controller;
 use Modules\Admin\Http\Requests\User\UserUpdateRequest;
-use Modules\Core\Entities\JobType;
 use Spatie\QueryBuilder\QueryBuilder;
 
 class UserController extends Controller
@@ -27,6 +24,19 @@ class UserController extends Controller
     public function index(): AnonymousResourceCollection
     {
         $users = QueryBuilder::for(User::class)
+            ->where('is_admin', 0)
+            ->paginate(10);
+        return DataResource::collection($users);
+    }
+
+    /**
+     * Display a listing of the resource.
+     * @return AnonymousResourceCollection
+     */
+    public function indexAdmin(): AnonymousResourceCollection
+    {
+        $users = QueryBuilder::for(User::class)
+            ->where('is_admin', 1)
             ->paginate(10);
         return DataResource::collection($users);
     }
@@ -50,7 +60,7 @@ class UserController extends Controller
      * @param User $id
      * @return DataResource
      */
-    public function update(UserUpdateRequest $request,User $id): DataResource
+    public function update(UserUpdateRequest $request, User $id): DataResource
     {
         $id->update($request->validated());
         return new DataResource($id);

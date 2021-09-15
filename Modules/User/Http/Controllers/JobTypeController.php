@@ -17,7 +17,7 @@ class JobTypeController extends Controller
     public function index(): AnonymousResourceCollection
     {
         $jobtypes = QueryBuilder::for(JobType::class)
-            ->paginate(10);
+            ->paginate(100);
         return DataResource::collection($jobtypes);
     }
 

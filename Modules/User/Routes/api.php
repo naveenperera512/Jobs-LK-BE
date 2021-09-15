@@ -24,8 +24,8 @@ Route::get('/categories/{id}', [CategoryController::class, 'show']);
 Route::get('/districts', [DistrictController::class, 'index']);
 Route::get('/districts/{id}', [DistrictController::class, 'show']);
 
-Route::get('/cities', [DistrictCityController::class, 'index']);
-Route::get('/cities/{id}', [DistrictCityController::class, 'show']);
+Route::get('/districts/{district}/cities',[DistrictCityController::class,'index']);
+Route::get('/cities/{city}',[DistrictCityController::class,'show']);
 
 Route::get('/jobTypes', [JobTypeController::class, 'index']);
 Route::get('/jobTypes/{id}', [JobTypeController::class, 'show']);

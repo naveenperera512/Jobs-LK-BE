@@ -19,14 +19,17 @@ Route::prefix('/admin')->group(function(){
 
     Route::apiResource('/categories','CategoryController');
 
-    Route::apiResource('/job_types','JobTypeController');
+    Route::apiResource('/jobTypes','JobTypeController');
+
 
     Route::get('/users',[UserController::class,'index']);
     Route::get('/users/{id}',[UserController::class,'show']);
     Route::put('/users/{id}',[UserController::class,'update']);
+    Route::get('/admins',[UserController::class,'indexAdmin']);
 
     Route::get('/vacancies',[VacancyController::class,'index']);
     Route::get('/vacancies/{id}',[VacancyController::class,'show']);
     Route::put('/vacancies/{id}',[VacancyController::class,'update']);
     Route::delete('/vacancies/{id}',[VacancyController::class,'destroy']);
+    Route::get('/pendingVacancies',[VacancyController::class,'indexPending']);
 });

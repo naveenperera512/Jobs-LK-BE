@@ -19,12 +19,6 @@ class JobTypeCreateRequest extends FormRequest
         ];
     }
 
-    public function message(){
-        return[
-            'name.required' => 'Name is required!',
-            'name.max' => 'Name is too long!',
-        ];
-    }
 
     /**
      * Determine if the user is authorized to make this request.

@@ -640,6 +640,11 @@ class DistrictTableSeeder extends Seeder
                     ["name" => "Cheddikulam"],
                 ],
             ],
+            [
+                "name" => "Work from Home",
+                "city" => [
+                ],
+            ],
 
         ];
 

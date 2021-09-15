@@ -14,19 +14,20 @@ class vacancyUpdateRequest extends FormRequest
     public function rules()
     {
         return [
-            "category_id"=> 'required',
-            "job_type_id"=> 'required',
-            "district_id"=> 'required',
-            "district_city_id"=> 'required',
-            "user_id"=> 'required',
-            "slug"=> 'required',
-            "title"=> 'required',
+            // "category_id"=> 'required',
+            // "job_type_id"=> 'required',
+            // "district_id"=> 'required',
+            // "district_city_id"=> 'required',
+            // "user_id"=> 'required',
+            // "slug"=> 'required',
+            // "title"=> 'required',
             "employee_name"=> 'required',
             "employee_email"=> 'required',
             "telephone"=> 'required',
-            "deadline_date" => 'required',
+            // "deadline_date" => 'required',
             "description"=> 'required',
-            "cv_image"=> 'required',
+            // "cv_image"=> 'required',
+            // "is_approved"=> 'required'
         ];
     }
 

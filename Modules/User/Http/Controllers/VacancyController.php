@@ -17,8 +17,12 @@ class VacancyController extends Controller
     public function index(): AnonymousResourceCollection
     {
         $vacancies = QueryBuilder::for(Vacancy::class)
-            ->allowedFilters(['category.name','district.name','city.name','jobs.name'])
-            ->with(['category','district','cities','jobs','files'])
+            ->when(request('category_id','')!= '', function ($query){$query->where('category_id',request('category_id'));})
+            ->when(request('job_type_id','')!= '', function ($query){$query->where('job_type_id',request('job_type_id'));})
+            ->when(request('district_id','')!= '', function ($query){$query->where('district_id',request('district_id'));})
+            ->with(['category', 'district', 'cities', 'jobs', 'files'])
+            ->orderBy('id', 'desc')
+            ->where( 'is_approved', 1)
             ->paginate(10);
         return DataResource::collection($vacancies);
     }
@@ -31,7 +35,9 @@ class VacancyController extends Controller
      */
     public function show(Vacancy $id): DataResource
     {
-        Vacancy::whereId($id->id)->firstOrFail();
-        return new DataResource($id);
+        $vacancy = Vacancy::whereId($id->id)
+            ->with(['category', 'district', 'cities', 'jobs', 'files'])
+            ->firstOrFail();
+        return new DataResource($vacancy);
     }
 }
